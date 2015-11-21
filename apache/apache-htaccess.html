@@ -1,0 +1,417 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>apache .htaccess文件详解和配置技巧总结 | 阿超的博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="阿超">
+    
+    <meta name="description" content="一、htaccess的基本作用　　.htaccess是一个纯文本文件，它里面存放着Apache服务器配置相关的指令。　　.htaccess主要的作用有：URL重写、自定义错误页面、MIME类型配置以及访问权限控制等。主要体现在伪静态的应用、图片防盗链、自定义404错误页面、阻止/允许特定IP/IP段、目录浏览与主页、禁止访问指定文件类型、文件密码保护等。　　.htaccess的用途范围主要针对当前目录。
+二、启用.htaccess的配置　　 启用.htaccess，需要修改httpd.conf，启用AllowOverride，并可以用AllowOverride限制特定命令的使用。 打开httpd.conf文件用文本编辑器打开后,查找复制代码 代码如下:&amp;lt;Directory /&amp;gt;Options FollowSymLinksAllowOverride None&amp;lt;/Directory&amp;gt;
+改为：&amp;lt;Directory /&amp;gt;Options FollowSymLinksAllowOverride All&amp;lt;/Directory&amp;gt;
+如果需要使用.htaccess以外的其他文件名，可以用AccessFileName指令来改变。例如，需要使用.config ，则可以在服务器配置文件中按以下方法配置：复制代码 代码如下:AccessFileName .config
+三、.htaccess访问控制1、访问控制基础：Order命令　　为了限制用户访问一些关键目录，通常加入.htaccess文件，常见的写法如下：复制代码 代码如下:&amp;lt;Files  ~ &quot;^.*\.([Ll][Oo][Gg])|([eE][xX][eE])&quot;&amp;gt; Order allow,deny Deny from all&amp;lt;/Files&amp;gt;">
+    
+    
+    <meta name="description" content="一、htaccess的基本作用　　.htaccess是一个纯文本文件，它里面存放着Apache服务器配置相关的指令。　　.htaccess主要的作用有：URL重写、自定义错误页面、MIME类型配置以及访问权限控制等。主要体现在伪静态的应用、图片防盗链、自定义404错误页面、阻止/允许特定IP/IP段、目录浏览与主页、禁止访问指定文件类型、文件密码保护等。　　.htaccess的用途范围主要针对当前">
+<meta property="og:type" content="article">
+<meta property="og:title" content="apache .htaccess文件详解和配置技巧总结">
+<meta property="og:url" content="http://www.awolau.com/apache/apache-htaccess.html">
+<meta property="og:site_name" content="阿超的博客">
+<meta property="og:description" content="一、htaccess的基本作用　　.htaccess是一个纯文本文件，它里面存放着Apache服务器配置相关的指令。　　.htaccess主要的作用有：URL重写、自定义错误页面、MIME类型配置以及访问权限控制等。主要体现在伪静态的应用、图片防盗链、自定义404错误页面、阻止/允许特定IP/IP段、目录浏览与主页、禁止访问指定文件类型、文件密码保护等。　　.htaccess的用途范围主要针对当前">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="apache .htaccess文件详解和配置技巧总结">
+<meta name="twitter:description" content="一、htaccess的基本作用　　.htaccess是一个纯文本文件，它里面存放着Apache服务器配置相关的指令。　　.htaccess主要的作用有：URL重写、自定义错误页面、MIME类型配置以及访问权限控制等。主要体现在伪静态的应用、图片防盗链、自定义404错误页面、阻止/允许特定IP/IP段、目录浏览与主页、禁止访问指定文件类型、文件密码保护等。　　.htaccess的用途范围主要针对当前">
+
+    
+    <link rel="alternative" href="/atom.xml" title="阿超的博客" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="阿超的博客" title="阿超的博客"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="阿超的博客">阿超的博客</a></h1>
+				<h2 class="blog-motto">分享学习收获</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+ 					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:www.awolau.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/apache/apache-htaccess.html" title="apache .htaccess文件详解和配置技巧总结" itemprop="url">apache .htaccess文件详解和配置技巧总结</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="http://www.awolau.com/about" title="阿超" target="_blank" itemprop="author">阿超</a>
+		
+  <p class="article-time">
+    <time datetime="2015-02-10T06:45:50.000Z" itemprop="datePublished"> 发表于 2015-2-10</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、htaccess的基本作用"><span class="toc-number">1.</span> <span class="toc-text">一、htaccess的基本作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、启用-htaccess的配置"><span class="toc-number">2.</span> <span class="toc-text">二、启用.htaccess的配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、-htaccess访问控制"><span class="toc-number">3.</span> <span class="toc-text">三、.htaccess访问控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、访问控制基础：Order命令"><span class="toc-number">3.1.</span> <span class="toc-text">1、访问控制基础：Order命令</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#将_RewriteEngine_模式打开"><span class="toc-number"></span> <span class="toc-text">将 RewriteEngine 模式打开</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rewrite_系统规则请勿修改"><span class="toc-number"></span> <span class="toc-text">Rewrite 系统规则请勿修改</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#custom_error_documents"><span class="toc-number"></span> <span class="toc-text">custom error documents</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#proc/self/environ?_没门！"><span class="toc-number"></span> <span class="toc-text">proc/self/environ? 没门！</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#阻止脚本企图通过URL修改mosConfig值"><span class="toc-number"></span> <span class="toc-text">阻止脚本企图通过URL修改mosConfig值</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#阻止脚本通过URL传递的base64_encode垃圾信息"><span class="toc-number"></span> <span class="toc-text">阻止脚本通过URL传递的base64_encode垃圾信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#阻止在URL含有标记的脚本"><span class="toc-number"></span> <span class="toc-text">阻止在URL含有标记的脚本</h1><p>RewriteCond %{QUERY_STRING} (&lt;|%3C).<em>script.</em>(&gt;|%3E) [NC,OR]  </p>
+<h1 id="阻止企图通过URL设置PHP的GLOBALS变量的脚本">阻止企图通过URL设置PHP的GLOBALS变量的脚本</h1><p>RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]  </p>
+<h1 id="阻止企图通过URL设置PHP的_REQUEST变量的脚本">阻止企图通过URL设置PHP的_REQUEST变量的脚本</h1><p>RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2})  </p>
+<h1 id="把所有被阻止的请求转向到403禁止提示页面！">把所有被阻止的请求转向到403禁止提示页面！</h1><p>RewriteRule ^(.*)$ index.php [F,L]<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">###<span class="number">3</span>. 阻止访问你的 <span class="class">.htaccess</span> 文件或者指定类型的文件</span><br><span class="line">　　下面的代码可以阻止别人访问你的.htaccess文件。同样，你也可以设定阻止多种文件类型。</span><br></pre></td></tr></table></figure></p>
+<h1 id="保护你的_htaccess_文件">保护你的 htaccess 文件</h1><Files .htaccess><br>order allow,deny<br>deny from all<br></Files>  
+
+<h1 id="阻止查看指定的文件">阻止查看指定的文件</h1><Files secretfile.jpg><br> order allow,deny<br> deny from all<br></Files>  
+
+<h1 id="多种文件类型">多种文件类型</h1><p><FilesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$"><br> Order Allow,Deny<br> Deny from all<br></FilesMatch><br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">###4.禁止脚本执行，加强你的目录安全</span></span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="禁止某些目录里的脚本执行权限">禁止某些目录里的脚本执行权限</h1><p>AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi<br>Options -ExecCGI<br><figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">##八、一些常用的设置</span></span><br><span class="line"><span class="preprocessor">###1.时区设置</span></span><br><span class="line">　　有些时候，当你在PHP里使用date或mktime函数时，由于时区的不同，它会显示出一些很奇怪的信息。下面是解决这个问题的方法之一。就是设置你的服务器的时区。你可以在这里找到所有支持的时区的清单。</span><br><span class="line"><span class="number">1</span>. SetEnv TZ Australia/Melbourne </span><br><span class="line"><span class="number">2</span>. seo/seo.html<span class="string">" target="</span>_blank<span class="string">"&gt;搜索引擎友好的301永久转向方法</span></span><br><span class="line">为什么这是搜索引擎友好的呢？因为现在很多现代的搜索引擎都有能根据检查<span class="number">301</span>永久转向来更新它现有的记录的功能。</span><br><span class="line">复制代码 代码如下:</span><br><span class="line">Redirect <span class="number">301</span> http:<span class="comment">//www.aqee.net/home http://www.aqee.net/ </span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">###3. 屏蔽下载对话框</span></span><br><span class="line">　　通常，当你下载东西的时候，你会看到一个对话框询问你是保持这个文件还是直接打开它。如果你不想看到这个东西，你可以把下面的一段代码放到你的.htaccess文件里。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>AddType application/octet-stream .pdf<br>AddType application/octet-stream .zip<br>AddType application/octet-stream .mov<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">###4. 省去www前缀</span></span><br><span class="line">　　SEO的一个原则是，确保你的网站只有一个<span class="built_in">URL</span>。因此，你需要把所有的通过www的访问转向的非www，或者反这来。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>RewriteEngine On<br>RewriteBase /<br>RewriteCond %{HTTP_HOST} ^www.aqee.net [NC]<br>RewriteRule ^(.*)$ <a href="http://aqee.net/$1">http://aqee.net/$1</a> [L,R=301]<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###5. 个性化Error页面</span></span><br><span class="line">　　对每个错误代码定制自己个性化的错误页面。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>ErrorDocument 401 /error/401.php<br>ErrorDocument 403 /error/403.php<br>ErrorDocument 404 /error/404.php<br>ErrorDocument 500 /error/500.php<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###6. 压缩文件</span></span><br><span class="line">　　通过压缩你的文件体积来优化网站的访问速度。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="压缩_text,_html,_javascript,_css,_xml:">压缩 text, html, javascript, css, xml:</h1><p>AddOutputFilterByType DEFLATE text/plain<br>AddOutputFilterByType DEFLATE text/html<br>AddOutputFilterByType DEFLATE text/xml<br>AddOutputFilterByType DEFLATE text/css<br>AddOutputFilterByType DEFLATE application/xml<br>AddOutputFilterByType DEFLATE application/xhtml+xml<br>AddOutputFilterByType DEFLATE application/rss+xml<br>AddOutputFilterByType DEFLATE application/javascript<br>.AddOutputFilterByType DEFLATE application/x-javascript<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###7. 缓存文件</span></span><br><span class="line">　　缓存文件是另外一个提高你的网站访问速度的好方法。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p><FilesMatch “.(flv|gif|jpg|jpeg|png|ico|swf|js|css|pdf)$”><br>Header set Cache-Control “max-age=2592000″<br></FilesMatch><br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###8. 对某些文件类型禁止使用缓存</span></span><br><span class="line">　　而另一方面，你也可以定制对某些文件类型禁止使用缓存。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="显式的规定对脚本和其它动态文件禁止使用缓存">显式的规定对脚本和其它动态文件禁止使用缓存</h1><p><FilesMatch “.(pl|php|cgi|spl|scgi|fcgi)$”><br>Header unset Cache-Control<br></FilesMatch><br>```</p>
+</span></a>
+		
+		</div>
+		
+		<h2 id="一、htaccess的基本作用">一、htaccess的基本作用</h2><p>　　.htaccess是一个纯文本文件，它里面存放着Apache服务器配置相关的指令。<br>　　.htaccess主要的作用有：URL重写、自定义错误页面、MIME类型配置以及访问权限控制等。主要体现在伪静态的应用、图片防盗链、自定义404错误页面、阻止/允许特定IP/IP段、目录浏览与主页、禁止访问指定文件类型、文件密码保护等。<br>　　.htaccess的用途范围主要针对当前目录。</p>
+<h2 id="二、启用-htaccess的配置">二、启用.htaccess的配置</h2><p>　　 启用.htaccess，需要修改httpd.conf，启用AllowOverride，并可以用AllowOverride限制特定命令的使用。 打开httpd.conf文件用文本编辑器打开后,查找<br>复制代码 代码如下:<br><figure class="highlight mathematica"><table><tr><td class="code"><pre><span class="line">&lt;<span class="keyword">Directory</span> /&gt;</span><br><span class="line"><span class="keyword">Options</span> FollowSymLinks</span><br><span class="line">AllowOverride <span class="keyword">None</span></span><br><span class="line">&lt;/<span class="keyword">Directory</span>&gt;</span><br></pre></td></tr></table></figure></p>
+<p>改为：<br><figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;Directory /&gt;</span></span><br><span class="line"><span class="keyword"><span class="common">Options</span></span> FollowSymLinks</span><br><span class="line"><span class="keyword">AllowOverride</span> <span class="literal">All</span></span><br><span class="line"><span class="tag">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>如果需要使用.htaccess以外的其他文件名，可以用AccessFileName指令来改变。例如，需要使用.config ，则可以在服务器配置文件中按以下方法配置：<br>复制代码 代码如下:<br><figure class="highlight nginx"><table><tr><td class="code"><pre><span class="line"><span class="title">AccessFileName</span> .config</span><br></pre></td></tr></table></figure></p>
+<h2 id="三、-htaccess访问控制">三、.htaccess访问控制</h2><h3 id="1、访问控制基础：Order命令">1、访问控制基础：Order命令</h3><p>　　为了限制用户访问一些关键目录，通常加入.htaccess文件，常见的写法如下：<br>复制代码 代码如下:<br><figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;Files  ~ "^.*\.([Ll][Oo][Gg])|([eE][xX][eE])"&gt;</span></span><br><span class="line"> <span class="keyword"><span class="common">Order</span></span> allow,deny</span><br><span class="line"> <span class="keyword"><span class="common">Deny</span></span> from <span class="literal">all</span></span><br><span class="line"><span class="tag">&lt;/Files&gt;</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>说明：<br>（1）Files后的波浪线表示启用“正则表达式”，简单的写法有：<figure class="highlight"><figcaption><span>*>```。</span></figcaption><table><tr><td class="code"><pre><span class="line">&#65288;2&#65289;Order&#21629;&#20196;&#65306;&#36890;&#36807;Allow,Deny&#21442;&#25968;&#65292;Apache&#39318;&#20808;&#25214;&#21040;&#24182;&#24212;&#29992;Allow&#21629;&#20196;&#65292;&#28982;&#21518;&#24212;&#29992;Deny&#21629;&#20196;&#65292;&#20197;&#38459;&#27490;&#25152;&#26377;&#35775;&#38382;&#65292;&#20063;&#21487;&#20197;&#20351;&#29992;Deny,Allow&#12290;&#10;##&#22235;&#12289;URL&#37325;&#20889;&#10; &#12288;&#12288;&#19979;&#38754;&#26159;&#19968;&#27573;&#31616;&#21333;&#30340;URL&#37325;&#20889;&#35268;&#21017;&#31034;&#20363;&#65306;&#10;&#22797;&#21046;&#20195;&#30721; &#20195;&#30721;&#22914;&#19979;:</span><br></pre></td></tr></table></figure></p>
+<h1 id="将_RewriteEngine_模式打开">将 RewriteEngine 模式打开</h1><p>RewriteEngine On </p>
+<h1 id="Rewrite_系统规则请勿修改">Rewrite 系统规则请勿修改</h1><p>RewriteRule ^p/([0-9]+).html$ index.php?post_id=$1<br>RewriteRule ^u-(username|uid)-(.+).html$ space.php?$1=$2<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line">　　其中，RewriteEngine 表示开启<span class="built_in">URL</span>重写，RewriteRule是重写规则。</span><br><span class="line"><span class="comment">##五、配置错误页面</span></span><br><span class="line">　　基本语法如下：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="custom_error_documents">custom error documents</h1><p>ErrorDocument 401 /err/401.php<br>ErrorDocument 403 /err/403.php<br>ErrorDocument 404 /err/404.php<br>ErrorDocument 500 /err/500.php<br><figure class="highlight axapta"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">##六、htaccess常用命令和配置技巧</span></span><br><span class="line"><span class="preprocessor">###1.禁止显示目录列表</span></span><br><span class="line">　　有些时候，由于某种原因，你的目录里没有<span class="keyword">index</span>文件，这意味着当有人在浏览器地址栏键入了该目录的路径，该目录下所有的文件都会显示出来，这会给你的网站留下安全隐患。为避免这种情况（而不必创建一堆的新<span class="keyword">index</span>文件），你可以在你的.htaccess文档中键入以下命令，用以阻止目录列表的显示：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>Options -Indexes<br><figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">###<span class="number">2</span>.阻止/允许特定的<span class="literal">IP</span>地址</span><br><span class="line">　　某些情况下，你可能只想允许某些特定<span class="literal">IP</span>的用户可以访问你的网站（例如：只允许使用特定ISP的用户进入某个目录），或者想封禁某些特定的<span class="literal">IP</span>地址（例如：将低级用户隔离于你的信息版面外）。当然，这只在你知道你想拦截的<span class="literal">IP</span>地址时才有用，然而现在网上的大多数用户都使用动态<span class="literal">IP</span>地址，所以这并不是限制使用的常用方法。你可以使用以下命令封禁一个<span class="literal">IP</span>地址：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>deny from 000.000.000.000<br><figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　这里的<span class="number">000.000</span><span class="string">.000</span><span class="string">.000</span>是被封禁的<span class="literal">IP</span>地址，如果你只指明了其中的几个，则可以封禁整个网段的地址。如你输入<span class="number">210.10</span><span class="string">.56</span>.，则将封禁<span class="number">210.10</span><span class="string">.56</span><span class="string">.0</span>～<span class="number">210.10</span><span class="string">.56</span><span class="string">.255</span>的所有<span class="literal">IP</span>地址。你可以使用以下命令允许一个<span class="literal">IP</span>地址访问网站：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>allow from 000.000.000.000<br><figure class="highlight x86asm"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　被允许的<span class="literal">IP</span>地址则为<span class="number">000.000</span><span class="string">.000</span><span class="string">.000</span>，你可以象封禁<span class="literal">IP</span>地址一样允许整个网段。如果你想阻止所有人访问该目录，则可以使用：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>deny from all<br><figure class="highlight delphi"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　不过这并不影响脚本程序使用这个目录下的文档。</span><br><span class="line">##<span class="string">#3</span>.替换<span class="keyword">index</span>文件</span><br><span class="line">　　也许你不想一直使用<span class="keyword">index</span>.htm或<span class="keyword">index</span>.html作为目录的索引文件。举例来说，如果你的站点使用PHP文件，你可能会想使用 <span class="keyword">index</span>.php来作为该目录的索引文档。当然也不必局限于“<span class="keyword">index</span>”文档，如果你愿意，使用.htaccess你甚至能够设置 foofoo.balh来作为你的索引文档！这些互为替换的索引文件可以排成一个列表，服务器会从左至右进行寻找，检查哪个文档在真实的目录中存在。如果一个也找不到，它将会把目录列表显示出来（除非你已经关闭了显示目录文件列表）。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>DirectoryIndex index.php index.php3 messagebrd.pl index.html index.htm<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">###4.重定向(rewrite)</span></span><br><span class="line">　　.htaccess 最有用的功能之一就是将请求重定向到同站内或站外的不同文档。这在你改变了一个文件名称，但仍然想让用户用旧地址访问到它时，变的极为有用。另一个应用（我发现的很有用的）是重定向到一个长<span class="built_in">URL</span>，例如在我的时事通讯中，我可以使用一个很简短的<span class="built_in">URL</span>来指向我的会员链接。以下是一个重定向文件的例子：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>Redirect /location/from/root/file.ext <a href="http:///new/file/location.xyz" target="_blank" rel="external">http:///new/file/location.xyz</a><br><figure class="highlight profile"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　上述例子中，访问在root目录下的名为<span class="filename">oldfile.html可以键入：</span><br><span class="line">复制代码 代码如下</span>:</span><br></pre></td></tr></table></figure></p>
+<p>/oldfile.html<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　访问一个旧次级目录中的文件可以键入：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>/old/oldfile.html<br><figure class="highlight groovy"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　你也可以使用.htaccess重定向整个网站的目录。假如你的网站上有一个名为olddirectory的目录，并且你已经在一个新网站<span class="string">http:</span> <span class="comment">///newdirectory/上建立了与上相同的文档，你可以将旧目录下所有的文件做一次重定向而不必一一声明：</span></span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>Redirect /olddirectory http:　///newdirectory<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　这样，任何指向到站点中/olddirectory目录的请求都将被重新指向新的站点，包括附加的额外<span class="built_in">URL</span>信息。例如有人键入：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>http: ///olddirecotry/oldfiles/images/image.gif<br><figure class="highlight"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　请求将被重定向到：</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>http: ///newdirectory/oldfiles/images/image.gif<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">　　如果正确使用，此功能将极其强大。</span><br><span class="line"><span class="preprocessor">##七、安全配置</span></span><br><span class="line">　　下面的htaccess代码能够提高你的web服务器的安全水平。图片链接盗用保护非常有用，它能防止其他人偷盗使用你的服务器上的图片资源。</span><br><span class="line"><span class="preprocessor">###1. 通过.htaccess放盗链</span></span><br><span class="line">　　痛恨那些偷盗链接你的web服务器上的图片资源而耗尽了你的带宽的行为吗？试试这个，你可以防止这种事情的发生。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>RewriteBase /<br>RewriteCond %{HTTP_REFERER} !^$<br>RewriteCond %{HTTP_REFERER} !^<a href="http://(www.)?aqee.net/.*$" target="_blank" rel="external">http://(www.)?aqee.net/.*$</a> [NC]<br>RewriteRule .(gif|jpg|swf|flv|png)$ /feed/ [R=302,L]<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">###2. 防黑客</span></span><br><span class="line">　　如果你想提高网站的安全等级，你可以去掉下面的几行代码，这样可以防止一些常见恶意<span class="built_in">URL</span>匹配的黑客攻击技术。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>RewriteEngine On  </p>
+<h1 id="proc/self/environ?_没门！">proc/self/environ? 没门！</h1><p>RewriteCond %{QUERY_STRING} proc/self/environ [OR]  </p>
+<h1 id="阻止脚本企图通过URL修改mosConfig值">阻止脚本企图通过URL修改mosConfig值</h1><p>RewriteCond %{QUERY<em>STRING} mosConfig</em>[a-zA-Z_]{1,21}(=|%3D) [OR]  </p>
+<h1 id="阻止脚本通过URL传递的base64_encode垃圾信息">阻止脚本通过URL传递的base64_encode垃圾信息</h1><p>RewriteCond %{QUERY_STRING} base64_encode.<em>(.</em>) [OR]  </p>
+<h1 id="阻止在URL含有标记的脚本">阻止在URL含有<script>标记的脚本</h1><p>RewriteCond %{QUERY_STRING} (&lt;|%3C).<em>script.</em>(&gt;|%3E) [NC,OR]  </p>
+<h1 id="阻止企图通过URL设置PHP的GLOBALS变量的脚本">阻止企图通过URL设置PHP的GLOBALS变量的脚本</h1><p>RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]  </p>
+<h1 id="阻止企图通过URL设置PHP的_REQUEST变量的脚本">阻止企图通过URL设置PHP的_REQUEST变量的脚本</h1><p>RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2})  </p>
+<h1 id="把所有被阻止的请求转向到403禁止提示页面！">把所有被阻止的请求转向到403禁止提示页面！</h1><p>RewriteRule ^(.*)$ index.php [F,L]<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">###<span class="number">3</span>. 阻止访问你的 <span class="class">.htaccess</span> 文件或者指定类型的文件</span><br><span class="line">　　下面的代码可以阻止别人访问你的.htaccess文件。同样，你也可以设定阻止多种文件类型。</span><br></pre></td></tr></table></figure></p>
+<h1 id="保护你的_htaccess_文件">保护你的 htaccess 文件</h1><Files .htaccess><br>order allow,deny<br>deny from all<br></Files>  
+
+<h1 id="阻止查看指定的文件">阻止查看指定的文件</h1><Files secretfile.jpg><br> order allow,deny<br> deny from all<br></Files>  
+
+<h1 id="多种文件类型">多种文件类型</h1><p><FilesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$"><br> Order Allow,Deny<br> Deny from all<br></FilesMatch><br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">###4.禁止脚本执行，加强你的目录安全</span></span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="禁止某些目录里的脚本执行权限">禁止某些目录里的脚本执行权限</h1><p>AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi<br>Options -ExecCGI<br><figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">##八、一些常用的设置</span></span><br><span class="line"><span class="preprocessor">###1.时区设置</span></span><br><span class="line">　　有些时候，当你在PHP里使用date或mktime函数时，由于时区的不同，它会显示出一些很奇怪的信息。下面是解决这个问题的方法之一。就是设置你的服务器的时区。你可以在这里找到所有支持的时区的清单。</span><br><span class="line"><span class="number">1</span>. SetEnv TZ Australia/Melbourne </span><br><span class="line"><span class="number">2</span>. seo/seo.html<span class="string">" target="</span>_blank<span class="string">"&gt;搜索引擎友好的301永久转向方法</span></span><br><span class="line">为什么这是搜索引擎友好的呢？因为现在很多现代的搜索引擎都有能根据检查<span class="number">301</span>永久转向来更新它现有的记录的功能。</span><br><span class="line">复制代码 代码如下:</span><br><span class="line">Redirect <span class="number">301</span> http:<span class="comment">//www.aqee.net/home http://www.aqee.net/ </span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">###3. 屏蔽下载对话框</span></span><br><span class="line">　　通常，当你下载东西的时候，你会看到一个对话框询问你是保持这个文件还是直接打开它。如果你不想看到这个东西，你可以把下面的一段代码放到你的.htaccess文件里。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>AddType application/octet-stream .pdf<br>AddType application/octet-stream .zip<br>AddType application/octet-stream .mov<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">###4. 省去www前缀</span></span><br><span class="line">　　SEO的一个原则是，确保你的网站只有一个<span class="built_in">URL</span>。因此，你需要把所有的通过www的访问转向的非www，或者反这来。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>RewriteEngine On<br>RewriteBase /<br>RewriteCond %{HTTP_HOST} ^www.aqee.net [NC]<br>RewriteRule ^(.*)$ <a href="http://aqee.net/$1">http://aqee.net/$1</a> [L,R=301]<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###5. 个性化Error页面</span></span><br><span class="line">　　对每个错误代码定制自己个性化的错误页面。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>ErrorDocument 401 /error/401.php<br>ErrorDocument 403 /error/403.php<br>ErrorDocument 404 /error/404.php<br>ErrorDocument 500 /error/500.php<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###6. 压缩文件</span></span><br><span class="line">　　通过压缩你的文件体积来优化网站的访问速度。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="压缩_text,_html,_javascript,_css,_xml:">压缩 text, html, javascript, css, xml:</h1><p>AddOutputFilterByType DEFLATE text/plain<br>AddOutputFilterByType DEFLATE text/html<br>AddOutputFilterByType DEFLATE text/xml<br>AddOutputFilterByType DEFLATE text/css<br>AddOutputFilterByType DEFLATE application/xml<br>AddOutputFilterByType DEFLATE application/xhtml+xml<br>AddOutputFilterByType DEFLATE application/rss+xml<br>AddOutputFilterByType DEFLATE application/javascript<br>.AddOutputFilterByType DEFLATE application/x-javascript<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###7. 缓存文件</span></span><br><span class="line">　　缓存文件是另外一个提高你的网站访问速度的好方法。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p><FilesMatch “.(flv|gif|jpg|jpeg|png|ico|swf|js|css|pdf)$”><br>Header set Cache-Control “max-age=2592000″<br></FilesMatch><br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###8. 对某些文件类型禁止使用缓存</span></span><br><span class="line">　　而另一方面，你也可以定制对某些文件类型禁止使用缓存。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="显式的规定对脚本和其它动态文件禁止使用缓存">显式的规定对脚本和其它动态文件禁止使用缓存</h1><p><FilesMatch “.(pl|php|cgi|spl|scgi|fcgi)$”><br>Header unset Cache-Control<br></FilesMatch><br>```</p>
+</script></h1>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/apache/">apache</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/htaccess/">.htaccess</a><a href="/tags/apache/">apache</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://www.awolau.com/apache/apache-htaccess.html" data-title="apache .htaccess文件详解和配置技巧总结 | 阿超的博客" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/apache/apache-htaccess-floder.html" title="Apache通过配置.htaccess文件禁止访问.git、.svn等目录">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Apache通过配置.htaccess文件禁止访问.git、.svn等目录</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/impression/new-post.html"  title="新的文章">
+ <strong>下一篇：</strong><br/> 
+ <span>新的文章
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section id="comments" class="comment">
+	<div class="ds-thread" data-thread-key="apache/apache-htaccess.html" data-title="apache .htaccess文件详解和配置技巧总结" data-url="http://www.awolau.com/apache/apache-htaccess.html"></div>
+</section>
+
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、htaccess的基本作用"><span class="toc-number">1.</span> <span class="toc-text">一、htaccess的基本作用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、启用-htaccess的配置"><span class="toc-number">2.</span> <span class="toc-text">二、启用.htaccess的配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、-htaccess访问控制"><span class="toc-number">3.</span> <span class="toc-text">三、.htaccess访问控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、访问控制基础：Order命令"><span class="toc-number">3.1.</span> <span class="toc-text">1、访问控制基础：Order命令</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#将_RewriteEngine_模式打开"><span class="toc-number"></span> <span class="toc-text">将 RewriteEngine 模式打开</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Rewrite_系统规则请勿修改"><span class="toc-number"></span> <span class="toc-text">Rewrite 系统规则请勿修改</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#custom_error_documents"><span class="toc-number"></span> <span class="toc-text">custom error documents</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#proc/self/environ?_没门！"><span class="toc-number"></span> <span class="toc-text">proc/self/environ? 没门！</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#阻止脚本企图通过URL修改mosConfig值"><span class="toc-number"></span> <span class="toc-text">阻止脚本企图通过URL修改mosConfig值</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#阻止脚本通过URL传递的base64_encode垃圾信息"><span class="toc-number"></span> <span class="toc-text">阻止脚本通过URL传递的base64_encode垃圾信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#阻止在URL含有标记的脚本"><span class="toc-number"></span> <span class="toc-text">阻止在URL含有标记的脚本</h1><p>RewriteCond %{QUERY_STRING} (&lt;|%3C).<em>script.</em>(&gt;|%3E) [NC,OR]  </p>
+<h1 id="阻止企图通过URL设置PHP的GLOBALS变量的脚本">阻止企图通过URL设置PHP的GLOBALS变量的脚本</h1><p>RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]  </p>
+<h1 id="阻止企图通过URL设置PHP的_REQUEST变量的脚本">阻止企图通过URL设置PHP的_REQUEST变量的脚本</h1><p>RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2})  </p>
+<h1 id="把所有被阻止的请求转向到403禁止提示页面！">把所有被阻止的请求转向到403禁止提示页面！</h1><p>RewriteRule ^(.*)$ index.php [F,L]<br><figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">###<span class="number">3</span>. 阻止访问你的 <span class="class">.htaccess</span> 文件或者指定类型的文件</span><br><span class="line">　　下面的代码可以阻止别人访问你的.htaccess文件。同样，你也可以设定阻止多种文件类型。</span><br></pre></td></tr></table></figure></p>
+<h1 id="保护你的_htaccess_文件">保护你的 htaccess 文件</h1><Files .htaccess><br>order allow,deny<br>deny from all<br></Files>  
+
+<h1 id="阻止查看指定的文件">阻止查看指定的文件</h1><Files secretfile.jpg><br> order allow,deny<br> deny from all<br></Files>  
+
+<h1 id="多种文件类型">多种文件类型</h1><p><FilesMatch ".(htaccess|htpasswd|ini|phps|fla|psd|log|sh)$"><br> Order Allow,Deny<br> Deny from all<br></FilesMatch><br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"><span class="preprocessor">###4.禁止脚本执行，加强你的目录安全</span></span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="禁止某些目录里的脚本执行权限">禁止某些目录里的脚本执行权限</h1><p>AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi<br>Options -ExecCGI<br><figure class="highlight 1c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">##八、一些常用的设置</span></span><br><span class="line"><span class="preprocessor">###1.时区设置</span></span><br><span class="line">　　有些时候，当你在PHP里使用date或mktime函数时，由于时区的不同，它会显示出一些很奇怪的信息。下面是解决这个问题的方法之一。就是设置你的服务器的时区。你可以在这里找到所有支持的时区的清单。</span><br><span class="line"><span class="number">1</span>. SetEnv TZ Australia/Melbourne </span><br><span class="line"><span class="number">2</span>. seo/seo.html<span class="string">" target="</span>_blank<span class="string">"&gt;搜索引擎友好的301永久转向方法</span></span><br><span class="line">为什么这是搜索引擎友好的呢？因为现在很多现代的搜索引擎都有能根据检查<span class="number">301</span>永久转向来更新它现有的记录的功能。</span><br><span class="line">复制代码 代码如下:</span><br><span class="line">Redirect <span class="number">301</span> http:<span class="comment">//www.aqee.net/home http://www.aqee.net/ </span></span><br><span class="line"></span><br><span class="line"><span class="preprocessor">###3. 屏蔽下载对话框</span></span><br><span class="line">　　通常，当你下载东西的时候，你会看到一个对话框询问你是保持这个文件还是直接打开它。如果你不想看到这个东西，你可以把下面的一段代码放到你的.htaccess文件里。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>AddType application/octet-stream .pdf<br>AddType application/octet-stream .zip<br>AddType application/octet-stream .mov<br><figure class="highlight livecodeserver"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">###4. 省去www前缀</span></span><br><span class="line">　　SEO的一个原则是，确保你的网站只有一个<span class="built_in">URL</span>。因此，你需要把所有的通过www的访问转向的非www，或者反这来。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>RewriteEngine On<br>RewriteBase /<br>RewriteCond %{HTTP_HOST} ^www.aqee.net [NC]<br>RewriteRule ^(.*)$ <a href="http://aqee.net/$1">http://aqee.net/$1</a> [L,R=301]<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###5. 个性化Error页面</span></span><br><span class="line">　　对每个错误代码定制自己个性化的错误页面。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p>ErrorDocument 401 /error/401.php<br>ErrorDocument 403 /error/403.php<br>ErrorDocument 404 /error/404.php<br>ErrorDocument 500 /error/500.php<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###6. 压缩文件</span></span><br><span class="line">　　通过压缩你的文件体积来优化网站的访问速度。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="压缩_text,_html,_javascript,_css,_xml:">压缩 text, html, javascript, css, xml:</h1><p>AddOutputFilterByType DEFLATE text/plain<br>AddOutputFilterByType DEFLATE text/html<br>AddOutputFilterByType DEFLATE text/xml<br>AddOutputFilterByType DEFLATE text/css<br>AddOutputFilterByType DEFLATE application/xml<br>AddOutputFilterByType DEFLATE application/xhtml+xml<br>AddOutputFilterByType DEFLATE application/rss+xml<br>AddOutputFilterByType DEFLATE application/javascript<br>.AddOutputFilterByType DEFLATE application/x-javascript<br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###7. 缓存文件</span></span><br><span class="line">　　缓存文件是另外一个提高你的网站访问速度的好方法。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<p><FilesMatch “.(flv|gif|jpg|jpeg|png|ico|swf|js|css|pdf)$”><br>Header set Cache-Control “max-age=2592000″<br></FilesMatch><br><figure class="highlight vala"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="preprocessor">###8. 对某些文件类型禁止使用缓存</span></span><br><span class="line">　　而另一方面，你也可以定制对某些文件类型禁止使用缓存。</span><br><span class="line">复制代码 代码如下:</span><br></pre></td></tr></table></figure></p>
+<h1 id="显式的规定对脚本和其它动态文件禁止使用缓存">显式的规定对脚本和其它动态文件禁止使用缓存</h1><p><FilesMatch “.(pl|php|cgi|spl|scgi|fcgi)$”><br>Header unset Cache-Control<br></FilesMatch><br>```</p>
+</span></a>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/apache/" title="apache">apache<sup>2</sup></a></li>
+		
+			<li><a href="/categories/git/" title="git">git<sup>1</sup></a></li>
+		
+			<li><a href="/categories/hosts/" title="hosts">hosts<sup>1</sup></a></li>
+		
+			<li><a href="/categories/impression/" title="impression">impression<sup>1</sup></a></li>
+		
+			<li><a href="/categories/java/" title="java">java<sup>1</sup></a></li>
+		
+			<li><a href="/categories/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/markdown/" title="markdown">markdown<sup>2</sup></a></li>
+		
+			<li><a href="/categories/php/" title="php">php<sup>0</sup></a></li>
+		
+			<li><a href="/categories/shadowsocks/" title="shadowsocks">shadowsocks<sup>4</sup></a></li>
+		
+			<li><a href="/categories/vcf/" title="vcf">vcf<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/shadowsocks/" title="shadowsocks">shadowsocks<sup>4</sup></a></li>
+		
+			<li><a href="/tags/科学上网/" title="科学上网">科学上网<sup>3</sup></a></li>
+		
+			<li><a href="/tags/google/" title="google">google<sup>3</sup></a></li>
+		
+			<li><a href="/tags/youtube/" title="youtube">youtube<sup>3</sup></a></li>
+		
+			<li><a href="/tags/facebook/" title="facebook">facebook<sup>3</sup></a></li>
+		
+			<li><a href="/tags/shadowsocks教程/" title="shadowsocks教程">shadowsocks教程<sup>2</sup></a></li>
+		
+			<li><a href="/tags/htaccess/" title=".htaccess">.htaccess<sup>2</sup></a></li>
+		
+			<li><a href="/tags/markdown/" title="markdown">markdown<sup>2</sup></a></li>
+		
+			<li><a href="/tags/markdown语法/" title="markdown语法">markdown语法<sup>2</sup></a></li>
+		
+			<li><a href="/tags/git/" title="git">git<sup>2</sup></a></li>
+		
+			<li><a href="/tags/apache/" title="apache">apache<sup>2</sup></a></li>
+		
+			<li><a href="/tags/shadowsocks-windows/" title="shadowsocks windows">shadowsocks windows<sup>1</sup></a></li>
+		
+			<li><a href="/tags/linux命令/" title="linux命令">linux命令<sup>1</sup></a></li>
+		
+			<li><a href="/tags/名片/" title="名片">名片<sup>1</sup></a></li>
+		
+			<li><a href="/tags/pac/" title="pac">pac<sup>1</sup></a></li>
+		
+			<li><a href="/tags/vcf/" title="vcf">vcf<sup>1</sup></a></li>
+		
+			<li><a href="/tags/user-rule/" title="user-rule">user-rule<sup>1</sup></a></li>
+		
+			<li><a href="/tags/shadowsocks-windows8/" title="shadowsocks windows8">shadowsocks windows8<sup>1</sup></a></li>
+		
+			<li><a href="/tags/pac文件修改/" title="pac文件修改">pac文件修改<sup>1</sup></a></li>
+		
+			<li><a href="/tags/vcf合并/" title="vcf合并">vcf合并<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="550" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=550&fansRow=2&ptype=1&speed=0&skin=1&isTitle=1&noborder=1&isWeibo=1&isFans=1&uid=1195294274&verifier=efeae95f&dpc=1"></iframe>
+</div>
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> Hello ,I&#39;m A Super in Google. <br/>
+			This is my blog,believe it or not.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1195294274" target="_blank" class="icon-weibo" title="微博" rel="external nofollow"></a>
+		
+		
+		<a href="https://github.com/chao591" target="_blank" class="icon-github" title="github" rel="external nofollow"></a>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		<a href="mailto:840652591@qq.com" target="_blank" class="icon-email" title="Email Me"></a>
+		
+	</div>
+		<p class="copyright">
+		
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F14ce12161668fc05d603993c60cc704f' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1254396325'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1254396325%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));</script>
+
+		Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo" rel="external nofollow">hexo</a> and Theme by <a href="https://github.com/chao591/cacman" target="_blank" title="Cacman" rel="external nofollow">Cacman</a> © 2015 
+		
+		<a href="http://www.awolau.com/about" target="_blank" title="阿超">阿超</a>
+		
+		</p>
+		<p class="copyright" style="font-family:'Helvetica Neue', Helvetica, 'Microsoft YaHei', 'WenQuanYi Micro Hei', Arial, sans-serif;font-size: 13px;">
+			<a href="http://www.miitbeian.gov.cn/" target="_blank" rel="external nofollow">京ICP备15010677号-1</a>
+		</p>
+</div>
+</footer>
+    <div id="totop">
+<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+</div>
+<script src="http://libs.baidu.com/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">var cacman_var = {};cacman_var.is_post=true;cacman_var.post_page_photo=true;cacman_var.duoshuo_shortname="awolau";cacman_var.post_toc_aside=true;</script>
+
+	<script type="text/javascript">cacman_var.post_page_photo_fancybox=true;</script>
+	<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+	<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script src="/js/main.js"></script>
+<!-- mathjax config similar to math.stackexchange -->
+
+
+
+  </body>
+</html>
